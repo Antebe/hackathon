@@ -58,14 +58,24 @@ public static void main(String[] args) {
         }
 
         //ксть смертей в Україні
-        int deathTotalUkr = 0;
+        int casesUkraine = 0;
+        List<Integer> caseUkr = new ArrayList<Integer>();
+        List<Integer> caseUkrDate = new ArrayList<Integer>();
         for (int i = 1; i < sizelist; i++) {
-            if (country[i].equals("Ukraine")) {
-                deathTotalUkr = deaths[i] + deathTotalUkr;
-                System.out.println(day[i] + "/" + month[i] + " " + deaths[i]);
+            if (country[i].equals("Russia")) { //set country
+                casesUkraine = cases[i] + casesUkraine;
+                caseUkr.add(cases[i]);
+                caseUkrDate.add(newyear(month[i], day[i]));
+                System.out.println(day[i] + "/" + month[i] + " " + cases[i]);
             }
         }
-        System.out.println("В Україні померло- " + deathTotalUkr);
+        System.out.println("Cases " + casesUkraine);
+        int[] casesUkrArr = caseUkr.stream().mapToInt(d -> d).toArray();
+        int[] casesUkrCal = caseUkrDate.stream().mapToInt(d -> d).toArray();
+        System.out.println("res " + casesUkrArr[0] + " " + casesUkrCal[0]);
+        dataseter.setCasesUkr(casesUkrArr);
+        dataseter.setCasesDate(casesUkrCal);
+
 
 //ініціалізуємо датасет якості повітря
         List<String[]> air = get("waqi-covid19-airqualitydata-2020.csv");
@@ -108,9 +118,9 @@ public static void main(String[] args) {
 
         //Київ
        List<Double> data = new ArrayList<Double>();
-       List<Integer> calendar = new ArrayList<Integer>();;
+       List<Integer> calendar = new ArrayList<Integer>();
         for (int i = 5; i < sizea; i++) {
-            if (aircountrycode[i].equals("UA") && airgas[i].equals("pm25")  && city[i].equals("Kyiv")) {
+            if (aircountrycode[i].equals("RU") && airgas[i].equals("no2")  && city[i].equals("Moscow")) { //set gas and city
                 System.out.println("Current - " + airdates[i] + " " + airgas[i] + " " + airmax[i]);
                 data.add(airmax[i]);
                 calendar.add(newyear(airmonths[i], airdays[i]));//типу дні після Нового року
@@ -183,7 +193,6 @@ public static void main(String[] args) {
 //        l = (67 - l)*h/(33) ;
 //        return (int) l;
 //    }
-
     public static List<String[]> get(String filename) {
         List<String[]> data = new ArrayList<String[]>();
         String testRow;
@@ -206,10 +215,18 @@ public static void main(String[] args) {
     }
 
     public static int newyear(int x, int y){
-        if(x==12){
-            x = -y;
+        if(x==12 || x==11){
+            x = -y - 30*(12-x);
         }else {
-            x = 30*(x-1) + y;
+            if(x==1 || x==3 || x==5 || x==7 || x==8 || x==10){
+                x = 31*(x-1) + y;
+            }
+            if(x==4 || x==6 || x==9 ){
+                x = 30*(x-1) + y;
+            }
+            if(x==2){
+                x = 29*(x-1) + y;
+            }
         }
         return x;
     }
@@ -221,18 +238,35 @@ public static void main(String[] args) {
         xAxis.setLabel("days after the New Year");
 
         NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("PM 2.5 in Kyiv");
+        yAxis.setLabel("no2 in Moscow x10");
 
         LineChart lineChart = new LineChart(xAxis, yAxis);
 
         XYChart.Series dataSeries1 = new XYChart.Series();
-        dataSeries1.setName("pm25");
+        dataSeries1.setName("no2");
 
-        for (int i = 0; i < dataseter.getCalendar().length; i++) {
-            dataSeries1.getData().add(new XYChart.Data(dataseter.getCalendar()[i], dataseter.getGas()[i]));
-            System.out.println(dataseter.getCalendar()[i] + " - " + dataseter.getGas()[i]);
+        for (int i = 0; i < dataseter.getGas().length; i++) {
+            if(dataseter.getCalendar()[i] < 160 && dataseter.getGas()[i] != 0){
+                dataSeries1.getData().add(new XYChart.Data(dataseter.getCalendar()[i], dataseter.getGas()[i]*10));
+                System.out.println(dataseter.getCalendar()[i] + " - " + dataseter.getGas()[i]);
+            }
+
         }
         lineChart.getData().add(dataSeries1);
+
+        XYChart.Series dataSeries2 = new XYChart.Series();
+        dataSeries2.setName("cases");
+
+        for (int i = 0; i < dataseter.getCasesUkr().length; i++) {
+            if(dataseter.getCasesUkr()[i] != 0){
+                dataSeries2.getData().add(new XYChart.Data(dataseter.getCasesDate()[i], dataseter.getCasesUkr()[i]));
+                System.out.println((dataseter.getCasesDate()[i] + " - " + dataseter.getCasesUkr()[i]));
+            }
+
+        }
+        lineChart.getData().add(dataSeries2);
+
+
         VBox vbox = new VBox(lineChart);
         Scene scene = new Scene(vbox, 400, 200);
 
