@@ -56,25 +56,68 @@ public class Main {
     //ксть смертей в Україні
         int deathTotalUkr = 0;
         for (int i = 1; i < sizelist; i++) {
-            if(country[i].equals("Ukraine")){
+            if(country[i].equals("Ukraine") ){
                 deathTotalUkr = deaths[i] + deathTotalUkr;
                 System.out.println(day[i] + "/" + month[i] + " " + deaths[i]);
             }
         }
-        System.out.println(deathTotalUkr);
+        System.out.println("В Україні померло- "+ deathTotalUkr);
 
+//ініціалізуємо датасет якості повітря
         List<String[]> air = get("waqi-covid19-airqualitydata-2020.csv");
         int sizea = air.size();
-        String[] dates = new String[sizea];
-        String[] countrycode = new String[sizea];
-        String[] gas = new String[sizea];
-        //все ще пишу
+        String[] airdates = new String[sizea];
+        int[] airdays = new int[sizea];
+        int[] airmonths = new int[sizea];
+        int[] airyear = new int[sizea];
+        String[] aircountrycode = new String[sizea];
+        String[] airgas = new String[sizea];
+        double[] airmax = new double[sizea];
+        for (int i = 5; i < air.size(); i++) {
+            String[] strings = air.get(i);
+            for (int j = 0; j < strings.length; j++) {
+                //System.out.print(strings[j] + " ");
+                switch (j) {
+                    case 0:
+                        airdates[i] = (strings[j]);
+                        String[] dates = airdates[i].split("-");//розбиваємо рррр/мм/дд на роки місяці та дні
+                        airdays[i] = Integer.parseInt(dates[2]);
+                        airmonths[i] = Integer.parseInt(dates[1]);
+                        airyear[i] = Integer.parseInt(dates[0]);
+                        break;
+                    case 1:
+                        aircountrycode[i] =(strings[j]);
+                        break;
+                    case 3:
+                        airgas[i] = (strings[j]);
+                        break;
+                    case 8:
+                        airmax[i] = Double.parseDouble(strings[j]);
+                        break;
+                }
+
+            }
+        }
+
+        //озон в Бельгії до і після
+        for (int i = 5; i < sizea ; i++) {
+            if (aircountrycode[i].equals("BE") && airgas[i].equals("o3") && airdays[i] == 11 && airmonths[i] == 1){
+                System.out.println("BEFORE - " + airdates[i] + " " + airgas[i] + " " + airmax[i] );
+            }
+        }
+        for (int i = 5; i < sizea ; i++) {
+            if (aircountrycode[i].equals("BE") && airgas[i].equals("o3") && airdays[i] == 16 && airmonths[i] == 5 ){
+                System.out.println("NOW - " + airdates[i] + " " + airgas[i] + " " + airmax[i] );
+            }
+        }
+
+
 
     }
 
 
 
-//ініціалізуємо датасет якості повітря
+
 
 
 
