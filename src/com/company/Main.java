@@ -6,36 +6,47 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
 
     public static void main(String[] args) {
+        int sizelist = 20085;
         String fileName = "c19cases";//датасет випадків ковід 19
         File file = new File(fileName);
         //створмо ерейлісти
         ArrayList<String> date = new ArrayList<>();
-        ArrayList<Integer> day = new ArrayList<>();
-        ArrayList<Integer> month = new ArrayList<>();
-        ArrayList<Integer> year = null;
-        ArrayList<Integer> cases = new ArrayList<>();
-        ArrayList<Integer> deaths = new ArrayList<>();
-        ArrayList<String> country = new ArrayList<>();
-        ArrayList<String> continent = new ArrayList<>();
+        int[] day = new int[sizelist];
+        int[] month = new int[sizelist];
+        int[] year = new int[sizelist];
+        int[] cases = new int[sizelist];
+        int[] deaths = new int[sizelist];
+        List<String> country = new ArrayList<>();
+        List<String> continent = new ArrayList<>();
 
         try {
             Scanner inpStream = new Scanner(file);
             inpStream.next(); //пропускаємо 1ий рядок бо це просто назви стовпчиків
+            int count = 0;
             while (inpStream.hasNext()) {
+
                 String data = inpStream.next(); //читаємо рядок
                 String[] values = data.split(","); //створюємо тимчасовий масив, ділячи рядок через коми. Таким чином, наприклад value[0] - це дата у вигляді дд/мм/рррр
-                 //додаємо типу в кожен ерей відповідну інфу
-                day.add(Integer.valueOf(values[1]));
-                month.add(Integer.valueOf(values[2]));
-                cases.add(Integer.valueOf(values[4]));
-                deaths.add(Integer.valueOf(values[5]));
-                country.add(values[6]);
+               //додаємо типу в кожен ерей відповідну інфу
+                try {
+                    day[count] = Integer.valueOf(values[1]);
+                    month[count] = (Integer.valueOf(values[2]));
+                    cases[count] = (Integer.valueOf(values[4]));
+                    deaths[count] = (Integer.valueOf(values[5]));
+                    country.add(values[6]);
+                    continent.add(values[10]);
+                    count++;
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 //хуй пойми чому, але воно дає Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 1
                 //	at com.company.Main.main(Main.java:33)
 
@@ -49,9 +60,11 @@ public class Main {
 
         //в якості тесту я хотів порахувати к-сть смертей 20.04 по всьому світу
         int sumDeaths = 0;
-        for (int i = 0; i < date.size(); i++) {
-            if (day.get(i) == 20 && month.get(i) == 4) {
-                sumDeaths = sumDeaths + deaths.get(i);
+        for (int i = 0; i < sizelist; i++) {
+            if (day[i] == 20 && month[i] == 4) {
+                System.out.println(country.get(i));
+                System.out.println(deaths[i]);
+                sumDeaths = sumDeaths + deaths[i];
             }
         }
         System.out.println(sumDeaths);
