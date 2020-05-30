@@ -15,17 +15,17 @@ public class Main {
 
 
 
-
-    List<String[]> data = get("c19cases");
-        int sizelist = data.size();
+//ініціалізуємо датасет випадків ковід 19
+        List<String[]> c19cases = get("c19cases");
+        int sizelist = c19cases.size();
         int[] day = new int[sizelist];
         int[] month = new int[sizelist];
         int[] cases = new int[sizelist];
         int[] deaths = new int[sizelist];
         String[] country = new String[sizelist];
         String[] continent = new String[sizelist];
-    for (int i = 1; i < data.size(); i++) {
-        String[] strings = data.get(i);
+    for (int i = 1; i < c19cases.size(); i++) {
+        String[] strings = c19cases.get(i);
             for (int j = 0; j < strings.length; j++) {
                 //System.out.print(strings[j] + " ");
                 switch (j){
@@ -58,10 +58,25 @@ public class Main {
         for (int i = 1; i < sizelist; i++) {
             if(country[i].equals("Ukraine")){
                 deathTotalUkr = deaths[i] + deathTotalUkr;
+                System.out.println(day[i] + "/" + month[i] + " " + deaths[i]);
             }
         }
         System.out.println(deathTotalUkr);
+
+        List<String[]> air = get("waqi-covid19-airqualitydata-2020.csv");
+        int sizea = air.size();
+        String[] dates = new String[sizea];
+        String[] countrycode = new String[sizea];
+        String[] gas = new String[sizea];
+        //все ще пишу
+
     }
+
+
+
+//ініціалізуємо датасет якості повітря
+
+
 
 
 //    public static int longi(double l, int w){
