@@ -16,7 +16,7 @@ public class Main {
         int sizelist = 20085;
         String fileName = "c19cases";//датасет випадків ковід 19
         File file = new File(fileName);
-        //створмо ерейлісти
+        //створмо ереї
         ArrayList<String> date = new ArrayList<>();
         int[] day = new int[sizelist];
         int[] month = new int[sizelist];
@@ -47,8 +47,7 @@ public class Main {
                     e.printStackTrace();
                 }
 
-                //хуй пойми чому, але воно дає Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 1
-                //	at com.company.Main.main(Main.java:33)
+
 
                 //System.out.println(data);
             }
