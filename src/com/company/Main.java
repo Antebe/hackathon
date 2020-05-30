@@ -13,7 +13,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        int sizelist = 20085;
+        int sizelist = 20083;
         String fileName = "c19cases";//датасет випадків ковід 19
         File file = new File(fileName);
         //створмо ереї
@@ -23,8 +23,8 @@ public class Main {
         int[] year = new int[sizelist];
         int[] cases = new int[sizelist];
         int[] deaths = new int[sizelist];
-        List<String> country = new ArrayList<>();
-        List<String> continent = new ArrayList<>();
+        String[] country = new String[sizelist];
+        String[] continent = new String[sizelist];
 
         try {
             Scanner inpStream = new Scanner(file);
@@ -40,8 +40,8 @@ public class Main {
                     month[count] = (Integer.valueOf(values[2]));
                     cases[count] = (Integer.valueOf(values[4]));
                     deaths[count] = (Integer.valueOf(values[5]));
-                    country.add(values[6]);
-                    continent.add(values[10]);
+                    country[count] = (values[6]);
+                    continent[count] = (values[10]);
                     count++;
                 } catch (Exception e){
                     e.printStackTrace();
@@ -57,16 +57,16 @@ public class Main {
         }
 
 
-        //в якості тесту я хотів порахувати к-сть смертей 20.04 по всьому світу
+        //в якості тесту я хотів порахувати к-сть смертей в Україні за весь час
         int sumDeaths = 0;
         for (int i = 0; i < sizelist; i++) {
-            if (day[i] == 20 && month[i] == 4) {
-                System.out.println(country.get(i));
-                System.out.println(deaths[i]);
+            if (country[i].equalsIgnoreCase("Ukraine")) {
+                System.out.println(country[i]);
+                System.err.println(deaths[i]);
                 sumDeaths = sumDeaths + deaths[i];
             }
         }
-        System.out.println(sumDeaths);
+        System.err.println(sumDeaths);//не працюэ
 
 
         //nihuya
