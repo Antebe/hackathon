@@ -72,7 +72,7 @@ public class Main2 extends Application {
             // System.out.println();
         }
 
-        //ксть смертей в Україні
+
         int casesUkraine = 0;
         List<Integer> caseUkr = new ArrayList<Integer>();
         List<Integer> caseUkrDate = new ArrayList<Integer>();
@@ -92,7 +92,6 @@ public class Main2 extends Application {
         dataseter.setCasesDate(casesUkrCal);
 
 
-//ініціалізуємо датасет якості повітря
         List<String[]> air = get("waqi-covid19-airqualitydata-2020.csv");
         int sizea = air.size();
         String[] airdates = new String[sizea];
@@ -131,7 +130,7 @@ public class Main2 extends Application {
             }
         }
 
-        //Київ
+      
         List<Double> data = new ArrayList<Double>();
         List<Integer> calendar = new ArrayList<Integer>();
         for (int i = 5; i < sizea; i++) {
