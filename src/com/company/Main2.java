@@ -13,13 +13,28 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import jdk.nashorn.internal.runtime.ListAdapter;
 
-public class Main extends Application {
-
-   public static Data dataseter = new Data();
-public static void main(String[] args) {
+public class Main2 extends Application {
 
 
-//ініціалізуємо датасет випадків ковід 19
+
+    public static Data dataseter = new Data();
+    public static void main(String[] args) {
+
+
+        //start
+        String gasname = "pm25";
+        String countryname = "Ukraine";
+        String countrycodename = "UA";
+        String cityname = "Kyiv";
+        double gasscale = 0.01;
+
+
+        dataseter.setGasname(gasname);
+        dataseter.setCountrycodename(countrycodename);
+        dataseter.setCountryname(countryname);
+        dataseter.setCityname(cityname);
+        dataseter.setGasscale(gasscale);
+
         List<String[]> c19cases = get("c19cases");
         int sizelist = c19cases.size();
         int[] day = new int[sizelist];
@@ -62,7 +77,7 @@ public static void main(String[] args) {
         List<Integer> caseUkr = new ArrayList<Integer>();
         List<Integer> caseUkrDate = new ArrayList<Integer>();
         for (int i = 1; i < sizelist; i++) {
-            if (country[i].equals("Russia")) { //set country
+            if (country[i].equals(countryname)) { //set country
                 casesUkraine = cases[i] + casesUkraine;
                 caseUkr.add(cases[i]);
                 caseUkrDate.add(newyear(month[i], day[i]));
@@ -117,10 +132,10 @@ public static void main(String[] args) {
         }
 
         //Київ
-       List<Double> data = new ArrayList<Double>();
-       List<Integer> calendar = new ArrayList<Integer>();
+        List<Double> data = new ArrayList<Double>();
+        List<Integer> calendar = new ArrayList<Integer>();
         for (int i = 5; i < sizea; i++) {
-            if (aircountrycode[i].equals("RU") && airgas[i].equals("no2")  && city[i].equals("Moscow")) { //set gas and city
+            if (aircountrycode[i].equals(countrycodename) && airgas[i].equals(gasname)  && city[i].equals(cityname)) { //set gas and city
                 System.out.println("Current - " + airdates[i] + " " + airgas[i] + " " + airmax[i]);
                 data.add(airmax[i]);
                 calendar.add(newyear(airmonths[i], airdays[i]));//типу дні після Нового року
@@ -184,7 +199,7 @@ public static void main(String[] args) {
     }
 
 
-//    public static int longi(double l, int w){
+    //    public static int longi(double l, int w){
 //        l = (l-7)*w/(33) ;
 //        return (int) l;
 //    }
@@ -238,16 +253,16 @@ public static void main(String[] args) {
         xAxis.setLabel("days after the New Year");
 
         NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("no2 in Moscow x10");
+        yAxis.setLabel(dataseter.getGasname() + " level in " + dataseter.getCityname() + " x" + dataseter.getGasscale());
 
         LineChart lineChart = new LineChart(xAxis, yAxis);
 
         XYChart.Series dataSeries1 = new XYChart.Series();
-        dataSeries1.setName("no2");
+        dataSeries1.setName(dataseter.getGasname());
 
         for (int i = 0; i < dataseter.getGas().length; i++) {
-            if(dataseter.getCalendar()[i] < 160 && dataseter.getGas()[i] != 0){
-                dataSeries1.getData().add(new XYChart.Data(dataseter.getCalendar()[i], dataseter.getGas()[i]*10));
+            if(dataseter.getCalendar()[i] < 160 && dataseter.getGas()[i] != 0 && dataseter.getCalendar()[i] > 0){
+                dataSeries1.getData().add(new XYChart.Data(dataseter.getCalendar()[i], dataseter.getGas()[i]*dataseter.getGasscale()));
                 System.out.println(dataseter.getCalendar()[i] + " - " + dataseter.getGas()[i]);
             }
 
@@ -258,18 +273,16 @@ public static void main(String[] args) {
         dataSeries2.setName("cases");
 
         for (int i = 0; i < dataseter.getCasesUkr().length; i++) {
-            if(dataseter.getCasesUkr()[i] != 0){
+            if(dataseter.getCasesUkr()[i] != 0 && dataseter.getCasesDate()[i] > 0){
                 dataSeries2.getData().add(new XYChart.Data(dataseter.getCasesDate()[i], dataseter.getCasesUkr()[i]));
                 System.out.println((dataseter.getCasesDate()[i] + " - " + dataseter.getCasesUkr()[i]));
             }
-
         }
         lineChart.getData().add(dataSeries2);
 
 
         VBox vbox = new VBox(lineChart);
         Scene scene = new Scene(vbox, 400, 200);
-
         primaryStage.setScene(scene);
         primaryStage.setHeight(300);
         primaryStage.setWidth(1200);
