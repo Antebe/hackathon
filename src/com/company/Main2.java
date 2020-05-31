@@ -22,11 +22,11 @@ public class Main2 extends Application {
 
 
         //start
-        String gasname = "pm25";
-        String countryname = "Ukraine";
-        String countrycodename = "UA";
-        String cityname = "Kyiv";
-        double gasscale = 0.01;
+        String gasname = "co";
+        String countryname = "United_States_of_America";
+        String countrycodename = "US";
+        String cityname = "Brooklyn";
+        double gasscale = 10000;
 
 
         dataseter.setGasname(gasname);
@@ -122,7 +122,7 @@ public class Main2 extends Application {
                     case 3:
                         airgas[i] = (strings[j]);
                         break;
-                    case 8:
+                    case 6:
                         airmax[i] = Double.parseDouble(strings[j]);
                         break;
                 }
@@ -130,7 +130,7 @@ public class Main2 extends Application {
             }
         }
 
-      
+
         List<Double> data = new ArrayList<Double>();
         List<Integer> calendar = new ArrayList<Integer>();
         for (int i = 5; i < sizea; i++) {
@@ -232,12 +232,7 @@ public class Main2 extends Application {
         if(x==12 || x==11){
             x = -y - 30*(12-x);
         }else {
-            if(x==1 || x==3 || x==5 || x==7 || x==8 || x==10){
-                x = 31*(x-1) + y;
-            }
-            if(x==4 || x==6 || x==9 ){
                 x = 30*(x-1) + y;
-            }
             if(x==2){
                 x = 29*(x-1) + y;
             }
